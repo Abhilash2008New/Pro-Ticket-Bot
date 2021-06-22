@@ -17,26 +17,26 @@ module.exports = async (bot, reaction, user) => {
 
   let already = new Discord.MessageEmbed()
   .setColor(color.red)
-  .setAuthor(`⛔ | Éh non ..`)
-  .setDescription(`Vous pouvez avoir qu'un seul ticket d'ouvert à la fois.`);
+  .setAuthor(`⛔ | Hey no ..`)
+  .setDescription(`You can only have one ticket open at a time.`);
 
   let success = new Discord.MessageEmbed()
   .setColor(color.green)
-  .setTitle(`🎟️ | Système de Ticket`)
-  .setDescription(`Veuillez expliquer la raison de votre demande. Un membre de l'équipe prendra en charge votre ticket sous peu.`);
+  .setTitle(`🎟️ | Ticket System`)
+  .setDescription(`Please explain the reason for your request. A member of the team will take care of your ticket shortly.`);
 
   let split = '';
   let usr = user.id.split(split);
   for (var i = 0; i < usr.length; i++) usr[i] = usr[i].trim();
 
-  if(message.embeds.length === 1 && message.embeds[0].title === 'Système de Ticket' && message.embeds[0].description === 'Réagissez avec 🎟️ pour créer un ticket.'){
+  if(message.embeds.length === 1 && message.embeds[0].title === 'Ticket System' && message.embeds[0].description === 'React with 🎟️ to create a ticket.'){
     if(reaction.emoji.name === "🎟️"){
       if(!message.guild.channels.cache.find(c => c.name === `ticket-${usr[0]}${usr[1]}${usr[2]}${usr[3]}`)){
 
         let role = message.guild.roles.cache.find(r => r.name === "Ticket Support");
         if(!role) {
-          message.guild.roles.create({data:{name: "Ticket Support", permissions: 0}, reason: 'Le staff a besoin de ce rôle pour voir les tickets.'});
-          message.channel.send(`S'il vous plaît, veuillez réagir une nouvelle fois au message de création de ticket.`).then(m => m.delete({timeout: 5000}).catch(e => {}));
+          message.guild.roles.create({data:{name: "Ticket Support", permissions: 0}, reason: 'Staff need this role to view tickets.'});
+          message.channel.send(`Please react to the ticket creation message again.`).then(m => m.delete({timeout: 5000}).catch(e => {}));
           reaction.users.remove(user.id);
           return
         }
@@ -60,7 +60,7 @@ module.exports = async (bot, reaction, user) => {
           },
         ],
         parent: categoria.id,
-        reason: `Cet utilisateur a besoin d'aide.`,
+        reason: `This user needs help.`,
         topic: `**ID:** ${user.id} -- **Tag:** ${user.tag} | s!close`
       }).then(channel => {
 
@@ -68,8 +68,8 @@ module.exports = async (bot, reaction, user) => {
         .setAuthor(`📝 | Ticket Ouvert`)
         .setTimestamp()
         .setColor(color.none)
-        .setFooter(`Système de Ticket`, bot.user.displayAvatarURL())
-        .setDescription(`Un utilisateur à ouvert un ticket et attend qu'on s'occupe de sa demande.`)
+        .setFooter(`Ticket system`, bot.user.displayAvatarURL())
+        .setDescription(`A user has opened a ticket and is waiting for their request to be handled.`)
         .addField(`Informations`, `**Utilisateur :** \`${user.tag}\`\n**ID :** \`${user.id}\`\n**Ticket :** ${channel}\n**Date :** \`${dateFormat(new Date(), "dd/mm/yyyy - HH:MM:ss")}\``);
 
         if(logsChannel) logsChannel.send(createdEmbed);
@@ -89,16 +89,16 @@ module.exports = async (bot, reaction, user) => {
 
   // ========================= //
 
-  if(message.embeds.length === 1 && message.embeds[0].title === '🎟️ | Ticket Terminé' && message.embeds[0].description === `Réagissez avec \\🗑️ pour fermer le ticket ou ne réagissez pas si vous avez d'autres demandes.`){
+  if(message.embeds.length === 1 && message.embeds[0].title === '🎟️ | Ticket Completed' && message.embeds[0].description === `React with \\ 🗑️ to close the ticket or do not react if you have other requests.`){
     if(reaction.emoji.name === "🗑️"){
       if(user.id === db.get(`ticket.${message.channel.name}.user`)){
 
         let deletedEmbed = new Discord.MessageEmbed()
-        .setAuthor(`🗑️ | Ticket Fermé`)
+        .setAuthor(`🗑️ | Ticket Closed`)
         .setColor(color.none)
-        .setDescription(`L'auteur a confirmé la fermeture du ticket.`)
+        .setDescription(`The author has confirmed that the ticket has been closed.`)
         .setTimestamp()
-        .setFooter(`Système de Ticket`, bot.user.displayAvatarURL())
+        .setFooter(`Ticket System`, bot.user.displayAvatarURL())
         .addField(`Informations`, `**Utilisateur :** \`${user.tag}\`\n**ID :** \`${user.id}\`\n**Ticket :** \`${message.channel.name}\`\n**Date :** \`${dateFormat(new Date(), "dd/mm/yyyy - HH:MM:ss")}\``);
 
         if(logsChannel) logsChannel.send(deletedEmbed);
