@@ -7,9 +7,9 @@ exports.run = async (bot, message, args, functions) => {
 if(message && message.deletable) message.delete().catch(e => {});
 
 let embed = new Discord.MessageEmbed()
-.setTitle(`Système de Ticket`)
+.setTitle(`Ticket System`)
 .setColor(color.none)
-.setDescription(`Réagissez avec 🎟️ pour créer un ticket.`);
+.setDescription(`React with 🎟️ to create a ticket.`);
 message.channel.send(embed).then(m => {
   m.react('🎟️');
 });
